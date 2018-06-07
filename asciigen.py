@@ -1,9 +1,8 @@
-# n code to convert an image to ASCII image.
-import sys, random, argparse
 import numpy as np
-import math
 
 from PIL import Image
+
+from exception import ImageTooSmall
 
 # gray scale level values from:
 # http://paulbourke.net/dataformats/asciiart/
@@ -53,8 +52,7 @@ def covertImageToAscii(fileName, cols, scale, moreLevels):
 
     # check if image size is too small
     if cols > W or rows > H:
-        print("Image too small for specified cols!")
-        exit(0)
+        raise ImageTooSmall()
 
     # ascii image is a list of character strings
     aimg = []

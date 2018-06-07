@@ -2,8 +2,6 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_uploads import UploadSet, IMAGES, configure_uploads
 from asciigen import convert_image
 
-UPLOADED_PHOTOS_DEST = '/tmp'
-
 app = Flask(__name__)
 app.config['UPLOADED_PHOTOS_DEST'] = '/tmp'
 
@@ -25,6 +23,11 @@ def upload():
 @app.route('/')
 def index():
     return render_template('upload.html')
+
+@app.errorhandler(Exception)
+def index_exception(error):
+    return render_template('upload.html', error=error)
+
 
 if __name__ == '__main__':
     app.run()
