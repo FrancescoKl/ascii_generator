@@ -12,9 +12,7 @@ configure_uploads(app, photos)
 
 @app.route('/show/<string:filename>')
 def show(filename):
-    image_matrix = convert_image('/tmp/' + filename, moreLevels=True)
-    for row in image_matrix:
-        print(row + '\n')
+    image_matrix = convert_image('/tmp/' + filename)
     return render_template('ascii.html', image_matrix=image_matrix)
 
 @app.route('/upload', methods=['GET', 'POST'])
