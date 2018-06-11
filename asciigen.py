@@ -103,6 +103,6 @@ def covertImageToAscii(fileName, cols, scale, moreLevels, edge):
     return aimg
 
 
-def convert_image(imgFile, scale=0.43, cols=80, moreLevels=False, edge=False):
-    aimg = covertImageToAscii(imgFile, cols, scale, moreLevels, edge)
+def convert_image(imgFile, cols='80', scale='0.43', moreLevels=False, edge=False):
+    aimg = covertImageToAscii(imgFile, int(cols), float(scale), moreLevels, edge)
     return aimg

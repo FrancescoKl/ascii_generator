@@ -3,8 +3,12 @@
 <div>
 {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
 <form method=POST enctype=multipart/form-data action="{{ url_for('upload') }}">
-    <input type=file name=photo><br>
-    <input type=submit>
+    <div>{{ form.photo.label }}:{{ form.photo }}</div><br>
+    <div>{{ form.scale.label }}:{{ form.scale }}</div><br>
+    <div>{{ form.cols.label }}:{{ form.cols }}</div><br>
+    <div>{{ form.moreLevels.label }}:{{ form.moreLevels }}</div><br>
+    <div>{{ form.edge.label }}:{{ form.edge }}</div><br>
+    <button type=submit>Upload</button>
 </form>
 </div>
 </body>
