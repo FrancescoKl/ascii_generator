@@ -1,12 +1,16 @@
+import os
+
 from flask import Flask, render_template, redirect, url_for, request
 from flask_uploads import UploadSet, IMAGES, configure_uploads
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed, FileRequired
-from wtforms import DecimalField, IntegerField,BooleanField
+from wtforms import DecimalField, IntegerField, BooleanField
 from wtforms.validators import NumberRange, Optional
+from werkzeug.utils import secure_filename
 from urllib.parse import urljoin
 
 from asciigen import convert_image
+from exception import FormValidationFailed
 
 app = Flask(__name__)
 app.config['UPLOADED_PHOTOS_DEST'] = '/tmp'
@@ -18,7 +22,12 @@ configure_uploads(app, photos)
 @app.route('/show/<string:filename>')
 def show(filename):
     qs_params = {k: v for k, v in request.args.to_dict().items() if v}
-    image_matrix = convert_image(urljoin('/tmp/', filename), **qs_params)
+    photo_path = urljoin('/tmp/', secure_filename(filename))
+    image_matrix = convert_image(photo_path, **qs_params)
+    try:
+        os.remove(photo_path)
+    except OSError:
+        print(f'{photo_path} not found')
     return render_template('ascii.html', image_matrix=image_matrix)
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -31,9 +40,9 @@ def upload():
     else:
         try:
             error_message = list(form.errors.values())[0][0]
+            raise FormValidationFailed(error_message)
         except IndexError:
-            error_message = 'Unrecognized error in form validation'
-        raise Exception(error_message)
+            raise FormValidationFailed()
 
 @app.route('/')
 def index():
