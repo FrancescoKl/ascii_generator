@@ -35,7 +35,8 @@ def show(filename):
     photo_path = urljoin('/tmp/', secure_filename(filename))
     image_matrix = convert_image(photo_path, **qs_params)
     try:
-        os.remove(photo_path)
+        #os.remove(photo_path)
+        pass
     except OSError:
         print(f'{photo_path} not found')
     return render_template('ascii.html', image_matrix=image_matrix)
@@ -86,7 +87,7 @@ class UploadForm(FlaskForm):
     photo = FileField('photo', validators=[FileRequired(), FileAllowed(photos, 'Images only!')])
     scale = DecimalField('scale', validators=[Optional(), NumberRange(min=0)])
     cols = IntegerField('cols', validators=[Optional(), NumberRange(min=1)])
-    moreLevels = BooleanField('moreLevels', validators=[Optional()])
+    morelevels = BooleanField('moreLevels', validators=[Optional()])
     edge = BooleanField('edge', validators=[Optional()])
 
 

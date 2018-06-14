@@ -7,8 +7,13 @@ from PIL import Image, ImageFilter
 
 from exception import ImageTooSmall
 
+# 70 levels of gray
+gscale1 = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,\"^`'._"  # changed space with underscore
 
-def get_average_l(image):
+# 10 levels of gray
+gscale2 = '@%#*+=-:._'  # changed space with underscore
+
+def get_greyscale_value(image, edge):
     """
     Given PIL Image, return average value of grayscale value
     """
@@ -18,43 +23,24 @@ def get_average_l(image):
     # get shape
     width, height = image_np.shape
 
-    # get average
-    return np.average(image_np.reshape(width * height))
+    reshaped_image = image_np.reshape(width * height)
 
-
-def get_max_l(image):
-    """
-    Given PIL Image, return average value of grayscale value
-    """
-    # get image as numpy array
-    image_np = np.array(image)
-
-    # get shape
-    width, height = image_np.shape
-
-    # get average
-    return np.max(image_np.reshape(width * height))
-
+    return np.max(reshaped_image) if edge else np.average(reshaped_image)
 
 def covert_image_to_ascii(filename, cols, scale, morelevels, edge):
     """
     Given Image and dims (rows, cols) returns an m*n list of Images
     """
-
-    # 70 levels of gray
-    GSCALE1 = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,\"^`'._"  # changed space with underscore
-
-    # 10 levels of gray
-    GSCALE2 = '@%#*+=-:._'  # changed space with underscore
+    global gscale1, gscale2
 
     # open image and convert to grayscale
     image = Image.open(filename).convert('L')
     if edge:
         image = image.filter(ImageFilter.FIND_EDGES)
         # reverse, darker background become a "lighter" char
-        GSCALE1 = GSCALE1[::-1]
-        GSCALE2 = GSCALE2[::-1]
-        # image.save("/tmp/edge.jpg")
+        gscale1 = gscale1[::-1]
+        gscale2 = gscale2[::-1]
+        #image.save("/tmp/edge.jpg")
 
     # store dimensions
     width, height = image.size[0], image.size[1]
@@ -91,9 +77,9 @@ def covert_image_to_ascii(filename, cols, scale, morelevels, edge):
             # crop image to extract tile
             img = image.crop((x1, y1, x2, y2))
 
-            avg = int(get_max_l(img)) if edge else int(get_average_l(img))
+            avg = int(get_greyscale_value(img, edge))
 
-            gsval = GSCALE1[int((avg * 69) / 255)] if morelevels else GSCALE2[int((avg * 9) / 255)]
+            gsval = gscale1[int((avg * 69) / 255)] if morelevels else gscale2[int((avg * 9) / 255)]
 
             # append ascii char to string
             aimg[j] += gsval
