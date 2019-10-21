@@ -46,7 +46,7 @@ mccabe==0.6.1
 munkres3==1.0.5.5
 mypy-lang==0.4.6
 nbformat==4.4.0
-nltk==3.3
+nltk==3.4.5
 numpy==1.14.3
 packaging==17.1
 pbr==4.0.4
