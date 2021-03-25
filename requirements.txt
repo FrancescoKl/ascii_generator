@@ -62,7 +62,7 @@ pyparsing==2.2.0
 PyPrint==0.2.6
 pyroma==2.2
 pytz==2018.4
-PyYAML==3.12
+PyYAML==5.4
 radon==1.4.0
 requests==2.19.0
 restructuredtext-lint==1.0.1
